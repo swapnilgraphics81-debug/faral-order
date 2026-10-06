@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FARAL.COM - WhatsApp Order</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#fffaf0;color:#252525}
+header{background:#176b3a;color:#fff;padding:18px 16px;position:sticky;top:0;z-index:20;box-shadow:0 2px 10px #0002}
+.header-inner{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.logo{font-size:28px;font-weight:800}
+.tagline{font-size:13px;opacity:.9;margin-top:3px}
+.cart-top{background:#fff;color:#176b3a;border:0;border-radius:24px;padding:10px 15px;font-weight:700;cursor:pointer}
+.hero{max-width:1100px;margin:18px auto;padding:28px 20px;background:linear-gradient(135deg,#fff0c8,#ffe0a0);border-radius:20px;text-align:center}
+.hero h1{margin:0;color:#176b3a;font-size:32px}
+.hero p{margin:8px 0 0;color:#6c4b1d}
+.search{max-width:600px;margin:18px auto 0;display:flex}
+.search input{width:100%;padding:13px 16px;border:1px solid #ddd;border-radius:25px;font-size:16px;outline:none}
+.container{max-width:1100px;margin:auto;padding:0 16px 40px}
+.section-title{color:#176b3a;text-align:center;margin:24px 0 15px}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:#fff;border-radius:16px;padding:14px;box-shadow:0 3px 14px #0001;border:1px solid #eee}
+.pic{height:145px;border-radius:12px;background:linear-gradient(135deg,#f8df9d,#fff2ce);display:flex;align-items:center;justify-content:center;font-size:72px}
+.card h3{margin:12px 0 4px;color:#176b3a}
+.price{font-size:19px;font-weight:800;color:#a65f00}
+.unit{font-size:12px;color:#777}
+.qty{display:flex;align-items:center;justify-content:center;gap:14px;margin:12px 0}
+.qty button{width:36px;height:36px;border:0;border-radius:50%;background:#176b3a;color:#fff;font-size:22px;cursor:pointer}
+.qty span{font-weight:700;min-width:24px;text-align:center}
+.add{width:100%;padding:11px;border:0;border-radius:9px;background:#e49a1b;color:#fff;font-weight:700;font-size:15px;cursor:pointer}
+.add:active,.qty button:active{transform:scale(.97)}
+.cart-box{margin-top:28px;background:#fff;border-radius:18px;padding:18px;box-shadow:0 3px 14px #0001}
+.cart-head{display:flex;justify-content:space-between;align-items:center}
+.cart-head h2{color:#176b3a;margin:0}
+.badge{background:#e53935;color:#fff;border-radius:20px;padding:4px 9px;font-size:13px}
+.cart-item{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid #eee}
+.remove{border:0;background:#fee;color:#c62828;border-radius:6px;padding:5px 8px;cursor:pointer}
+.total{text-align:right;font-size:22px;font-weight:800;color:#176b3a;margin:16px 0}
+.form{margin-top:15px;background:#fffaf0;border:1px solid #eadfbe;border-radius:13px;padding:15px}
+.form h3{margin:0 0 12px;color:#176b3a}
+.form input,.form textarea,.form select{width:100%;padding:11px;margin-bottom:10px;border:1px solid #ccc;border-radius:8px;font:inherit}
+.form textarea{min-height:75px;resize:vertical}
+.whatsapp{width:100%;padding:14px;border:0;border-radius:10px;background:#25D366;color:#fff;font-size:18px;font-weight:800;cursor:pointer}
+.empty{text-align:center;color:#888;padding:15px}
+.floating{position:fixed;right:18px;bottom:18px;width:58px;height:58px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:28px;box-shadow:0 4px 15px #0004;z-index:30}
+footer{text-align:center;padding:22px;color:#777;font-size:13px}
+@media(max-width:600px){
+ .logo{font-size:23px}.hero h1{font-size:27px}.products{grid-template-columns:repeat(2,1fr);gap:10px}
+ .card{padding:10px}.pic{height:120px;font-size:55px}.card h3{font-size:16px}.price{font-size:17px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="logo">🌿 FARAL.COM</div>
+      <div class="tagline">Homemade Faral • Easy WhatsApp Ordering</div>
+    </div>
+    <button class="cart-top" onclick="document.getElementById('cart').scrollIntoView({behavior:'smooth'})">
+      🛒 Cart <span id="topCount">0</span>
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Traditional Ladoo Collection</h1>
+  <p>Choose your favourite faral, add quantity and order directly on WhatsApp.</p>
+  <div class="search">
+    <input id="search" type="search" placeholder="🔍 Search Ladoo..." oninput="renderProducts()">
+  </div>
+</section>
+
+<main class="container">
+  <h2 class="section-title">🍬 Our Ladoo</h2>
+  <div id="products" class="products"></div>
+
+  <section id="cart" class="cart-box">
+    <div class="cart-head">
+      <h2>🛒 Your Order</h2>
+      <span class="badge"><span id="cartCount">0</span> Kg</span>
+    </div>
+
+    <div id="cartItems"><div class="empty">Your cart is empty.</div></div>
+    <div class="total">Total: ₹<span id="total">0</span></div>
+
+    <div class="form">
+      <h3>👤 Customer Details</h3>
+      <input id="name" type="text" placeholder="Your Name">
+      <input id="mobile" type="tel" maxlength="10" placeholder="Mobile Number">
+      <select id="type">
+        <option value="Home Delivery">🚚 Home Delivery</option>
+        <option value="Pickup">🏪 Pickup</option>
+      </select>
+      <textarea id="address" placeholder="Delivery Address"></textarea>
+    </div>
+
+    <button class="whatsapp" onclick="sendOrder()">📲 Send Order on WhatsApp</button>
+  </section>
+</main>
+
+<a class="floating" href="https://wa.me/919967308190" target="_blank" aria-label="WhatsApp">💬</a>
+
+<footer>FARAL.COM • Simple WhatsApp Order System</footer>
+
+<script>
+const products=[
+ {name:"Besan Ladoo",price:680,icon:"🟤"},
+ {name:"Moongdal Ladoo",price:650,icon:"🟡"},
+ {name:"Rava Ladoo",price:600,icon:"🟠"},
+ {name:"Poshtik Ladoo",price:680,icon:"🟤"},
+ {name:"Methi Ladoo",price:720,icon:"🟢"},
+ {name:"Nachni Ladoo",price:720,icon:"🟤"},
+ {name:"Rajgira Ladoo",price:760,icon:"🟤"},
+ {name:"Dink Ladoo",price:1250,icon:"🟤"},
+ {name:"Peanut Ladoo",price:500,icon:"🟤"}
+];
+
+let selected=Array(products.length).fill(1);
+let cart=[];
+
+function renderProducts(){
+ const q=document.getElementById("search").value.toLowerCase().trim();
+ const box=document.getElementById("products");
+ box.innerHTML="";
+ products.forEach((p,i)=>{
+   if(q && !p.name.toLowerCase().includes(q)) return;
+   box.innerHTML+=`
+   <article class="card">
+     <div class="pic">${p.icon}</div>
+     <h3>${p.name}</h3>
+     <div class="price">₹${p.price}</div>
+     <div class="unit">Per Kg</div>
+     <div class="qty">
+       <button onclick="changeQty(${i},-1)">−</button>
+       <span id="q${i}">${selected[i]}</span>
+       <button onclick="changeQty(${i},1)">+</button>
+     </div>
+     <button class="add" onclick="addToCart(${i})">Add to Cart</button>
+   </article>`;
+ });
+}
+
+function changeQty(i,n){
+ selected[i]=Math.max(1,selected[i]+n);
+ const el=document.getElementById("q"+i);
+ if(el) el.textContent=selected[i];
+}
+
+function addToCart(i){
+ const found=cart.find(x=>x.i===i);
+ if(found) found.qty+=selected[i];
+ else cart.push({i,qty:selected[i]});
+ renderCart();
+ document.getElementById("cart").scrollIntoView({behavior:"smooth"});
+}
+
+function removeItem(i){
+ cart=cart.filter(x=>x.i!==i);
+ renderCart();
+}
+
+function renderCart(){
+ const box=document.getElementById("cartItems");
+ let total=0,count=0;
+ box.innerHTML="";
+ if(!cart.length) box.innerHTML='<div class="empty">Your cart is empty.</div>';
+
+ cart.forEach(x=>{
+   const p=products[x.i], amount=p.price*x.qty;
+   total+=amount; count+=x.qty;
+   box.innerHTML+=`
+    <div class="cart-item">
+      <div><b>${p.name}</b><br>${x.qty} Kg × ₹${p.price}</div>
+      <div><b>₹${amount}</b><br><button class="remove" onclick="removeItem(${x.i})">Remove</button></div>
+    </div>`;
+ });
+ document.getElementById("total").textContent=total;
+ document.getElementById("cartCount").textContent=count;
+ document.getElementById("topCount").textContent=count;
+}
+
+function sendOrder(){
+ if(!cart.length){alert("Please add an item to your cart.");return;}
+ const name=document.getElementById("name").value.trim();
+ const mobile=document.getElementById("mobile").value.trim();
+ const type=document.getElementById("type").value;
+ const address=document.getElementById("address").value.trim();
+
+ if(!name){alert("Please enter your name.");return;}
+ if(!/^[0-9]{10}$/.test(mobile)){alert("Please enter a valid 10 digit mobile number.");return;}
+ if(type==="Home Delivery" && !address){alert("Please enter your delivery address.");return;}
+
+ let total=0;
+ let msg="🌿 FARAL.COM ORDER\n\n";
+ msg+="Customer: "+name+"\n";
+ msg+="Mobile: "+mobile+"\n";
+ msg+="Order Type: "+type+"\n";
+ if(address) msg+="Address: "+address+"\n";
+ msg+="\nORDER DETAILS:\n";
+
+ cart.forEach((x,n)=>{
+   const p=products[x.i], amount=p.price*x.qty;
+   total+=amount;
+   msg+=(n+1)+". "+p.name+" - "+x.qty+" Kg - ₹"+amount+"\n";
+ });
+ msg+="\nTOTAL: ₹"+total;
+
+ window.open("https://wa.me/919967308190?text="+encodeURIComponent(msg),"_blank");
+}
+
+renderProducts();
+renderCart();
+</script>
+</body>
+</html>
