@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FARAL.COM - WhatsApp Order</title>
+<!-- Product photos are stored in the images/ folder. -->
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#fffaf0;color:#252525}
@@ -21,7 +22,7 @@ header{background:#176b3a;color:#fff;padding:18px 16px;position:sticky;top:0;z-i
 .section-title{color:#176b3a;text-align:center;margin:24px 0 15px}
 .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
 .card{background:#fff;border-radius:16px;padding:14px;box-shadow:0 3px 14px #0001;border:1px solid #eee}
-.pic{height:145px;border-radius:12px;background:linear-gradient(135deg,#f8df9d,#fff2ce);display:flex;align-items:center;justify-content:center;font-size:72px}
+.pic{height:190px;border-radius:12px;background:#fff4d8;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}\n.pic img{width:100%;height:100%;object-fit:cover;display:block}\n.pic .fallback{font-size:72px;display:none}
 .card h3{margin:12px 0 4px;color:#176b3a}
 .price{font-size:19px;font-weight:800;color:#a65f00}
 .unit{font-size:12px;color:#777}
@@ -47,7 +48,7 @@ header{background:#176b3a;color:#fff;padding:18px 16px;position:sticky;top:0;z-i
 footer{text-align:center;padding:22px;color:#777;font-size:13px}
 @media(max-width:600px){
  .logo{font-size:23px}.hero h1{font-size:27px}.products{grid-template-columns:repeat(2,1fr);gap:10px}
- .card{padding:10px}.pic{height:120px;font-size:55px}.card h3{font-size:16px}.price{font-size:17px}
+ .card{padding:10px}.pic{height:135px}.pic .fallback{font-size:55px}.card h3{font-size:16px}.price{font-size:17px}
 }
 </style>
 </head>
@@ -107,15 +108,15 @@ footer{text-align:center;padding:22px;color:#777;font-size:13px}
 
 <script>
 const products=[
- {name:"Besan Ladoo",price:680,icon:"🟤"},
- {name:"Moongdal Ladoo",price:650,icon:"🟡"},
- {name:"Rava Ladoo",price:600,icon:"🟠"},
- {name:"Poshtik Ladoo",price:680,icon:"🟤"},
- {name:"Methi Ladoo",price:720,icon:"🟢"},
- {name:"Nachni Ladoo",price:720,icon:"🟤"},
- {name:"Rajgira Ladoo",price:760,icon:"🟤"},
- {name:"Dink Ladoo",price:1250,icon:"🟤"},
- {name:"Peanut Ladoo",price:500,icon:"🟤"}
+  {name:"Besan Ladoo",price:680,icon:"🟤",image:"images/ladoo-1.png"},
+  {name:"Moongdal Ladoo",price:650,icon:"🟡",image:"images/ladoo-2.png"},
+  {name:"Rava Ladoo",price:600,icon:"🟠",image:"images/ladoo-3.png"},
+  {name:"Poshtik Ladoo",price:680,icon:"🟤",image:"images/ladoo-4.png"},
+  {name:"Methi Ladoo",price:720,icon:"🟢",image:"images/ladoo-5.png"},
+  {name:"Nachni Ladoo",price:720,icon:"🟤",image:"images/ladoo-6.png"},
+  {name:"Rajgira Ladoo",price:760,icon:"🟤",image:"images/ladoo-7.png"},
+  {name:"Dink Ladoo",price:1250,icon:"🟤",image:"images/ladoo-8.png"},
+  {name:"Peanut Ladoo",price:500,icon:"🟤",image:"images/ladoo-9.png"}
 ];
 
 let selected=Array(products.length).fill(1);
@@ -129,7 +130,11 @@ function renderProducts(){
    if(q && !p.name.toLowerCase().includes(q)) return;
    box.innerHTML+=`
    <article class="card">
-     <div class="pic">${p.icon}</div>
+     <div class="pic">
+        <img src="${p.image}" alt="${p.name}" loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span class="fallback">${p.icon}</span>
+      </div>
      <h3>${p.name}</h3>
      <div class="price">₹${p.price}</div>
      <div class="unit">Per Kg</div>
